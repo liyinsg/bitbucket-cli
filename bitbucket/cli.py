@@ -2,6 +2,7 @@ from .config import USERNAME, PASSWORD, SCM
 from .repositories import *
 from . import scm
 import optparse
+import os
 
 def run():
 	p = optparse.OptionParser()

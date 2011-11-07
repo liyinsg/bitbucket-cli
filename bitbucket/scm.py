@@ -31,7 +31,7 @@ def clone(scm, method, username, reponame):
 
 def pull(method, username, reponame):
 	scm = detect_scm()
-	url = get_url(scm, method, username, reponame)
+	url = gen_url(scm, method, username, reponame)
 	if scm == 'git':
 		os.system('git pull %s master' % url)
 	elif scm == 'hg':
@@ -39,7 +39,7 @@ def pull(method, username, reponame):
 
 def push(method, username, reponame):
 	scm = detect_scm()
-	url = get_url(scm, method, username, reponame)
+	url = gen_url(scm, method, username, reponame)
 	if scm == 'git':
 		os.system('git push %s master' % url)
 	elif scm == 'hg':
