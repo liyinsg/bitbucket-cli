@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+import bitbucket as bb
+
+if __name__ == '__main__':
+	bb.cli.run()

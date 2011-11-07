@@ -1,15 +1,20 @@
 import os
-from ConfigParser import SafeConfigParser as ConfigParser
+import ConfigParser
+
+def get_default(config, section, key, default=''):
+	try:
+		return config.get(section, key)
+	except ConfigParser.NoSectionError:
+		return default
+	except ConfigParser.NoOptionError:
+		return default
 
 CONFIG_FILE = os.path.expanduser('~/.bitbucket')
-BASE_URL = 'https://api.bitbucket.org/1.0/'
 
-try:
-	config = ConfigParser()
-	config.read([CONFIG_FILE])
+config = ConfigParser.SafeConfigParser()
+config.read([CONFIG_FILE])
 
-	USERNAME = config.get('auth', 'username')
-	PASSWORD = config.get('auth', 'password')
-except:
-	USERNAME = ''
-	PASSWORD = ''
+USERNAME = get_default(config, 'auth', 'username')
+PASSWORD = get_default(config, 'auth', 'password')
+SCM = get_default(config, 'options', 'scm', 'hg')
+
