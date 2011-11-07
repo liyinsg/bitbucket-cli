@@ -7,11 +7,16 @@ import os
 def run():
 	p = optparse.OptionParser()
 	
-	p.add_option('--username', '-u', dest='username', default=USERNAME)
-	p.add_option('--password', '-p', dest='password', default=PASSWORD)
-	p.add_option('--public', '-o', action='store_false', dest='private')
-	p.add_option('--private', '-c', action='store_true', dest='private')
-	p.add_option('--scm', '-s', dest='scm', default=SCM)
+	p.add_option('--username', '-u', dest='username', default=USERNAME,
+		help='your bitbucket username')
+	p.add_option('--password', '-p', dest='password', default=PASSWORD,
+		help='your bitbucket password')
+	p.add_option('--public', '-o', action='store_false', dest='private',
+		help='make this repo public')
+	p.add_option('--private', '-c', action='store_true', dest='private',
+		help='make this repo private')
+	p.add_option('--scm', '-s', dest='scm', default=SCM,
+		help='which scm to use (git|hg)')
 
 	options, arguments = p.parse_args()
 
