@@ -31,8 +31,10 @@ def run():
 		scm_type = scm.detect_scm()
 		if scm_type:
 			reponame = os.path.basename(os.getcwd())
-			create_repository(reponame, options.username, options.password,
-				scm_type, options.private)
+			try:
+				create_repository(reponame, options.username, options.password,
+					scm_type, options.private)
+			except Exception, e: print e
 			scm.push('ssh', options.username, reponame)
 		else:
 			print('Could not detect a git or hg repo in your current directory.')
