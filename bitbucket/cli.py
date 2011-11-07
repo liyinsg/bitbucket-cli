@@ -15,6 +15,10 @@ def run():
 
 	options, arguments = p.parse_args()
 
+	if len(arguments) == 0:
+		p.print_usage()
+		exit()
+
 	if arguments[0] == 'create':
 		create_repository(arguments[1], options.username, options.password, 
 				options.scm, options.private)
