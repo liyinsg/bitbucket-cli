@@ -2,9 +2,10 @@ from setuptools import setup
 
 setup(
 	name = 'bitbucket-cli',
-	version = '0.1',
+	version = '0.1.0',
 	author = 'Zhehao Mao',
 	author_email = 'zhehao.mao@gmail.com',
+	description = 'BitBucket command line interface',
 	packages = ['bitbucket'],
 	install_requires = [ 'requests' ],
 	entry_points = {
