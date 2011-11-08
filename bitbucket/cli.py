@@ -1,4 +1,4 @@
-from .config import USERNAME, PASSWORD, SCM
+from .config import USERNAME, PASSWORD, SCM, PROTOCOL
 from .repositories import *
 from . import scm
 import optparse
@@ -17,6 +17,8 @@ def run():
 		help='make this repo private')
 	p.add_option('--scm', '-s', dest='scm', default=SCM,
 		help='which scm to use (git|hg)')
+	p.add_option('--protocol', '-P', dest='protocol', default=PROTOCOL,
+		help='which network protocol to use (https|ssh)')
 
 	options, arguments = p.parse_args()
 
@@ -33,9 +35,9 @@ def run():
 	elif arguments[0] == 'delete':
 		delete_repository(options.username, arguments[1], options.password)
 	elif arguments[0] == 'clone':
-		scm.clone(options.scm, 'https', arguments[1], arguments[2])
+		scm.clone(options.scm, options.protocol, arguments[1], arguments[2])
 	elif arguments[0] == 'pull':
-		scm.pull('https', arguments[1], arguments[2])
+		scm.pull(options.protocol, arguments[1], arguments[2])
 	elif arguments[0] == 'create-from-local':
 		scm_type = scm.detect_scm()
 		if scm_type:
@@ -44,7 +46,7 @@ def run():
 				create_repository(reponame, options.username, options.password,
 					scm_type, options.private)
 			except Exception, e: print e
-			scm.push('ssh', options.username, reponame)
+			scm.push(options.protocol, options.username, reponame)
 		else:
 			print('Could not detect a git or hg repo in your current directory.')
 	

@@ -10,7 +10,7 @@ def detect_scm(path='.'):
 		return 'hg'
 	return ''
 
-def gen_url(scm, method, username, reponame):
+def gen_url(scm, protocol, username, reponame):
 	templates = {
 		'git': {
 			'ssh': 'git@bitbucket.org:%s/%s.git',
@@ -21,25 +21,25 @@ def gen_url(scm, method, username, reponame):
 			'https': 'https://bitbucket.org/%s/%s'
 		}
 	}
-	if scm not in {'git', 'hg'} or method not in {'ssh', 'https'}:
+	if scm not in {'git', 'hg'} or protocol not in {'ssh', 'https'}:
 		return ''
-	return templates[scm][method] % (username, reponame)
+	return templates[scm][protocol] % (username, reponame)
 
-def clone(scm, method, username, reponame):
-	url = gen_url(scm, method, username, reponame)
+def clone(scm, protocol, username, reponame):
+	url = gen_url(scm, protocol, username, reponame)
 	os.system('%s clone %s' % (scm, url))
 
-def pull(method, username, reponame):
+def pull(protocol, username, reponame):
 	scm = detect_scm()
-	url = gen_url(scm, method, username, reponame)
+	url = gen_url(scm, protocol, username, reponame)
 	if scm == 'git':
 		os.system('git pull %s master' % url)
 	elif scm == 'hg':
 		os.system('hg pull %s' % url)
 
-def push(method, username, reponame):
+def push(protocol, username, reponame):
 	scm = detect_scm()
-	url = gen_url(scm, method, username, reponame)
+	url = gen_url(scm, protocol, username, reponame)
 	if scm == 'git':
 		os.system('git push %s master' % url)
 	elif scm == 'hg':

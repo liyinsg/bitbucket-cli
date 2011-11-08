@@ -28,7 +28,7 @@ and aims to expose a similar interface for BitBucket users.
   -p PASSWORD, --password=PASSWORD  your bitbucket password
   -o, --public                      make this repo public
   -c, --private                     make this repo private
-  -s SCM, --scm=SCM                 which scm to use (git|hg)
+  -P PROTOCOL, --protocol=PROTOCOL  which network protocol to use (https|ssh)
 
 ## Configuration
 
@@ -41,5 +41,6 @@ format
 
 	[options]
 	scm = <'git' or 'hg'>
+	protocol = <'https' or 'ssh'>
 
 It will provide default options which can be overridden on the command line.

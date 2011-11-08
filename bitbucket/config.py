@@ -17,4 +17,4 @@ config.read([CONFIG_FILE])
 USERNAME = get_default(config, 'auth', 'username')
 PASSWORD = get_default(config, 'auth', 'password')
 SCM = get_default(config, 'options', 'scm', 'hg')
-
+PROTOCOL = get_default(config, 'options', 'protocol', 'https')
