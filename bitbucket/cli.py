@@ -33,7 +33,7 @@ def run():
 	elif arguments[0] == 'delete':
 		delete_repository(options.username, arguments[1], options.password)
 	elif arguments[0] == 'clone':
-		scm.clone('https', arguments[1], arguments[2])
+		scm.clone(options.scm, 'https', arguments[1], arguments[2])
 	elif arguments[0] == 'pull':
 		scm.pull('https', arguments[1], arguments[2])
 	elif arguments[0] == 'create-from-local':
