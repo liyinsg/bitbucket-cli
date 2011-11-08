@@ -23,18 +23,18 @@ def search_repositories(name):
 	r = requests.get(url, params={'name': name})
 	return _json_or_error(r)
 
-def get_repository(username, repo_slug, password):
-	url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
+def get_repository(ownername, repo_slug, username, password):
+	url = BASE_URL + 'repositories/%s/%s/' % (ownername, repo_slug)
 	r = _optional_auth_get(url, username, password)
 	return _json_or_error(r)
 
-def get_tags(username, repo_slug, password):
-	url = BASE_URL + 'repositories/%s/%s/tags/' % (username, repo_slug)
+def get_tags(ownername, repo_slug, username, password):
+	url = BASE_URL + 'repositories/%s/%s/tags/' % (ownername, repo_slug)
 	r = _optional_auth_get(url, username, password)
 	return _json_or_error(r)
 
-def get_branches(username, repo_slug, password):
-	url = BASE_URL + 'repositories/%s/%s/branches/' % (username, repo_slug)
+def get_branches(ownername, repo_slug, username, password):
+	url = BASE_URL + 'repositories/%s/%s/branches/' % (ownername, repo_slug)
 	r = _optional_auth_get(url, username, password)
 	return _json_or_error(r)
 

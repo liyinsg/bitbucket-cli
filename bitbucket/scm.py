@@ -1,5 +1,6 @@
 import os
 import subprocess
+from .repositories import get_repository
 
 def detect_scm(path='.'):
 	git_path = os.path.join(path, '.git')
@@ -25,8 +26,10 @@ def gen_url(scm, protocol, username, reponame):
 		return ''
 	return templates[scm][protocol] % (username, reponame)
 
-def clone(scm, protocol, username, reponame):
-	url = gen_url(scm, protocol, username, reponame)
+def clone(protocol, ownername, reponame, username, password):
+	repo = get_repository(ownername, reponame, username, password)
+	scm = repo['scm']
+	url = gen_url(scm, protocol, ownername, reponame)
 	os.system('%s clone %s' % (scm, url))
 
 def pull(protocol, username, reponame):
