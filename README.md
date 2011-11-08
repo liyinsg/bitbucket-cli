@@ -1,7 +1,7 @@
 # BitBucket CLI
 
 A command-line helper for BitBucket. This program is inspired Chris Wanstrath's
-wonderful github command-line program (https://github.com/defunkt/github-gem),
+wonderful [github command-line program](https://github.com/defunkt/github-gem),
 and aims to expose a similar interface for BitBucket users. 
 
 ## Usage
