@@ -44,3 +44,7 @@ format
 	protocol = <'https' or 'ssh'>
 
 It will provide default options which can be overridden on the command line.
+
+For the `clone`, `pull`, and `create-from-local` commands, the scm will be 
+detected from bitbucket or your local filesystem. Explicitly declaring the
+scm on the command line or from the user configuration will not override it.
