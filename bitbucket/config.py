@@ -1,6 +1,12 @@
 import os
 import ConfigParser
 
+st = os.stat(os.path.expanduser('~/.bitbucket'))
+if st.st_mode & 0o044:
+    print ('Warning: config file is readable by other users.\n' 
+           'If you are storing your password in this file, ' 
+           'it may not be secure\n')
+
 def get_default(config, section, key, default=''):
 	try:
 		return config.get(section, key)
