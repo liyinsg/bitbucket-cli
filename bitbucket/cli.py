@@ -57,5 +57,6 @@ def run():
 		else:
 			print('Could not detect a git or hg repo in your current directory.')
 	elif subcom == 'download':
-		download_file(subargs[0], subargs[1], subargs[2], args.password)
+		download_file(subargs[0], subargs[1], subargs[2], 
+                args.username, args.password)
         print "Successfully downloaded " + subargs[2]
