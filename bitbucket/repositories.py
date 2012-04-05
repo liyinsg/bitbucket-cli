@@ -56,7 +56,11 @@ def delete_repository(username, repo_slug, password):
 	return r.status_code == 200
 
 def download_file(username, repo_slug, filename, password=''):
-    url = BASE_URL + '%s/%s/downloads/%s' % (username, repo_slug, filename)
-    r = _optional_auth_get(url, username, password)
-    with open(filename, 'wb') as f:
-        f.write(r.content)
+	url = 'https://bitbucket.org/%s/%s/downloads/%s' % \
+		(username, repo_slug, filename)
+	r = _optional_auth_get(url, username, password)
+	if r.status_code == 200:
+		with open(filename, 'wb') as f:
+			f.write(r.content)
+	else:
+		r.raise_for_status()
