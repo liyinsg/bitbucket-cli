@@ -3,7 +3,7 @@ import json
 
 BASE_URL = 'https://api.bitbucket.org/1.0/'
 
-def _optional_auth_get(url, username, password, **kwargs):
+def _optional_auth_get(url, username='', password='', **kwargs):
 	if password:
 		return requests.get(url, auth=(username, password), **kwargs)
 	return requests.get(url, **kwargs)
@@ -13,7 +13,7 @@ def _json_or_error(r):
 		r.raise_for_status()
 	return json.loads(r.content)
 
-def get_user_repos(username, password):
+def get_user_repos(username, password=''):
 	url = BASE_URL + 'user/repositories/'
 	r = requests.get(url, auth=(username, password))
 	return _json_or_error(r)
@@ -23,17 +23,17 @@ def search_repositories(name):
 	r = requests.get(url, params={'name': name})
 	return _json_or_error(r)
 
-def get_repository(ownername, repo_slug, username, password):
+def get_repository(ownername, repo_slug, username, password=''):
 	url = BASE_URL + 'repositories/%s/%s/' % (ownername, repo_slug)
 	r = _optional_auth_get(url, username, password)
 	return _json_or_error(r)
 
-def get_tags(ownername, repo_slug, username, password):
+def get_tags(ownername, repo_slug, username, password=''):
 	url = BASE_URL + 'repositories/%s/%s/tags/' % (ownername, repo_slug)
 	r = _optional_auth_get(url, username, password)
 	return _json_or_error(r)
 
-def get_branches(ownername, repo_slug, username, password):
+def get_branches(ownername, repo_slug, username, password=''):
 	url = BASE_URL + 'repositories/%s/%s/branches/' % (ownername, repo_slug)
 	r = _optional_auth_get(url, username, password)
 	return _json_or_error(r)
@@ -54,3 +54,9 @@ def delete_repository(username, repo_slug, password):
 	url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
 	r = requests.delete(url, auth=(username, password))
 	return r.status_code == 200
+
+def download_file(username, repo_slug, filename, password=''):
+    url = BASE_URL + '%s/%s/downloads/%s' % (username, repo_slug, filename)
+    r = _optional_auth_get(url, username, password)
+    with open(filename, 'wb') as f:
+        f.write(r.content)
