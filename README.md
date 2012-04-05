@@ -22,6 +22,8 @@ and aims to expose a similar interface for BitBucket users.
 
     delete username reponame
 
+    download username reponame filename
+
 ## Options
 
     -h, --help                        show this help message and exit
