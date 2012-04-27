@@ -59,4 +59,4 @@ def run():
 	elif subcom == 'download':
 		download_file(subargs[0], subargs[1], subargs[2], 
                 args.username, args.password)
-        print "Successfully downloaded " + subargs[2]
+		print "Successfully downloaded " + subargs[2]
