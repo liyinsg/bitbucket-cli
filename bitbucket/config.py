@@ -8,12 +8,12 @@ if st.st_mode & 0o044:
            'it may not be secure\n')
 
 def get_default(config, section, key, default=''):
-	try:
-		return config.get(section, key)
-	except ConfigParser.NoSectionError:
-		return default
-	except ConfigParser.NoOptionError:
-		return default
+    try:
+        return config.get(section, key)
+    except ConfigParser.NoSectionError:
+        return default
+    except ConfigParser.NoOptionError:
+        return default
 
 CONFIG_FILE = os.path.expanduser('~/.bitbucket')
 
