@@ -48,12 +48,13 @@ def run():
 	elif subcom == 'create-from-local':
 		scm_type = scm.detect_scm()
 		if scm_type:
-			reponame = os.path.basename(os.getcwd())
+			reponame = os.path.basename(os.getcwd()).lower()
 			try:
 				create_repository(reponame, args.username, args.password,
 					scm_type, args.private)
 			except Exception, e: print e
 			scm.push(args.protocol, args.username, reponame)
+            scm.add_remote(args.protocol, args.username, reponame)
 		else:
 			print('Could not detect a git or hg repo in your current directory.')
 	elif subcom == 'download':

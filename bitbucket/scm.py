@@ -1,6 +1,7 @@
 import os
 import subprocess
 from .repositories import get_repository
+from ConfigParser import SafeConfigParser as ConfigParser
 
 def detect_scm(path='.'):
 	git_path = os.path.join(path, '.git')
@@ -48,3 +49,19 @@ def push(protocol, username, reponame):
 	elif scm == 'hg':
 		os.system('hg push %s' % url)
 	
+def add_remote(protocol, username, reponame, remotename='origin'):
+    scm = detect_scm()
+    url = gen_url(scm, protocol, username, reponame)
+
+    if scm == 'git':
+        os.system('git remote add %s %s' % (remotename, url))
+    elif scm == 'hg':
+        parser = ConfigParser()
+        parser.read(['.hg/hgrc'])
+        if not parser.has_section('paths'):
+            parser.add_section('paths')
+            parser.set('paths', 'default', url)
+            parser.set('paths', 'default-push', url)
+            f = open('.hg/hgrc', 'w')
+            parser.write(f)
+            f.close()
