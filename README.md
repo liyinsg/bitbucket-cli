@@ -4,6 +4,10 @@ A command-line helper for BitBucket. This program is inspired Chris Wanstrath's
 wonderful [github command-line program](https://github.com/defunkt/github-gem),
 and aims to expose a similar interface for BitBucket users. 
 
+## Installation
+
+    pip install bitbucket-cli
+
 ## Usage
 
     bitbucket command [options]
