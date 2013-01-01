@@ -48,6 +48,14 @@ def push(protocol, username, reponame):
         os.system('git push %s master' % url)
     elif scm == 'hg':
         os.system('hg push %s' % url)
+
+def push_upstream(remotename='origin'):
+    scm = detect_scm()
+
+    if scm == 'git':
+        os.system('git push --set-upstream %s master' % remotename)
+    elif scm == 'hg':
+        os.system('hg push')
     
 def add_remote(protocol, username, reponame, remotename='origin'):
     scm = detect_scm()

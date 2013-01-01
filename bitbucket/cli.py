@@ -52,9 +52,10 @@ def run():
             try:
                 create_repository(reponame, args.username, args.password,
                     scm_type, args.private)
-            except Exception, e: print e
-            scm.push(args.protocol, args.username, reponame)
+            except Exception, e: 
+                print e
             scm.add_remote(args.protocol, args.username, reponame)
+            scm.push_upstream()
         else:
             print('Could not detect a git or hg repo in your current directory.')
     elif subcom == 'download':
