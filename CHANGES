@@ -1,0 +1,14 @@
+
+- updated command line help options to provide better information
+
+- removed unparsed positional subargs and replaced with argparse arguments
+
+- added password prompt when no password provided via config or commandline argument
+
+- reset config password warning message to only display if config password is actually used.
+
+- updated the delete command's expected http response from 200 to 204.
+
+- added `list` command
+
+- added some output info 
