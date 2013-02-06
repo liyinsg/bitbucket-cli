@@ -3,6 +3,7 @@ from .repositories import *
 from . import scm
 import argparse
 import os
+import sys
 
 def run():
     p = argparse.ArgumentParser(description='Interact with BitBucket')
@@ -30,7 +31,7 @@ def run():
 
     if not subcom:
         p.print_usage()
-        exit()
+        sys.exit(1)
 
     if subcom == 'create':
         create_repository(subargs[0], args.username, args.password, 
@@ -62,3 +63,6 @@ def run():
         download_file(subargs[0], subargs[1], subargs[2], 
                 args.username, args.password)
         print "Successfully downloaded " + subargs[2]
+    else:
+        print("Unrecognized subcommand " + subcom)
+        sys.exit(1)
