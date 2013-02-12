@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 from requests.auth import HTTPDigestAuth
 
 BASE_URL = 'https://api.bitbucket.org/1.0/'
@@ -54,7 +54,7 @@ def update_repository(username, repo_slug, password, **opts):
 def delete_repository(username, repo_slug, password):
     url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
     r = requests.delete(url, auth=(username, password))
-    return r.status_code == 200
+    return r.status_code == 204
 
 def download_file(repo_user, repo_slug, filename, username='', password=''):
     url = 'https://bitbucket.org/%s/%s/downloads/%s' % \
