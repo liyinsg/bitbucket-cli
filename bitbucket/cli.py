@@ -144,9 +144,9 @@ def run():
                             type=str,
                             help='the bitbucket repository name')
 
-    commands = ('create', 'update', 'delete', 'clone', 'pull', 'download', 'list')
+    command_names = ('create', 'update', 'delete', 'clone', 'pull', 'download', 'list')
     # SUBPARSER
-    subp = p.add_subparsers(title='Commands', metavar='\n  '.join(commands))
+    subp = p.add_subparsers(title='Commands', metavar='\n  '.join(command_names))
 
     # CREATE COMMAND PARSER
     create_cmd_parser = subp.add_parser('create',
@@ -156,10 +156,18 @@ def run():
                                    '                        reponame'),
                             description='create a new bitbucket repository')
     add_standard_args(create_cmd_parser,
-                            'username password protocol private public scm reponame')
+                      ('username',
+                       'password',
+                       'protocol',
+                       'private',
+                       'public',
+                       'scm',
+                       'reponame'))
     create_cmd_parser.set_defaults(func=create_command)
 
+    #
     # UPDATE COMMAND PARSER
+    #
     update_cmd_parser = subp.add_parser('update',
                             usage=('bitbucket update [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD] [--private | --public]\n'
@@ -167,21 +175,32 @@ def run():
                                    '                        reponame'),
                             description='update an existing bitbucket repository')
     add_standard_args(update_cmd_parser,
-                            ('username password protocol private '
-                             'scm ownername reponame'))
+                      ('username',
+                       'password',
+                       'protocol',
+                       'private',
+                       'scm',
+                       'ownername',
+                       'reponame'))
     update_cmd_parser.set_defaults(func=update_command)
 
+    #
     # DELETE COMMAND PARSER
+    #
     delete_cmd_parser = subp.add_parser('delete',
                             usage=('bitbucket delete [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD]\n'
                                    '                        reponame'),
                             description='delete an existing bitbucket repository')
     add_standard_args(delete_cmd_parser,
-                            'username reponame password')
+                      ('username',
+                       'reponame',
+                       'password'))
     delete_cmd_parser.set_defaults(func=delete_command)
 
+    #
     # CLONE COMMAND PARSER
+    #
     clone_cmd_parser = subp.add_parser('clone',
                             usage=('bitbucket delete [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD]\n'
@@ -190,19 +209,30 @@ def run():
                                    '                        reponame'),
                             description='clone a bitbucket repository')
     add_standard_args(clone_cmd_parser,
-                      'username password protocol ownername reponame')
+                      ('username',
+                       'password',
+                       'protocol'
+                       'ownername',
+                       'reponame'))
     clone_cmd_parser.set_defaults(func=clone_command)
 
+    #
     # PULL COMMAND PARSER
+    #
     pull_cmd_parser = subp.add_parser('pull',
                             usage=('bitbucket pull [-h] [--protocol PROTOCOL]\n'
                                    '                        ownername\n'
                                    '                        reponame'),
                             description='pull....')
-    add_standard_args(pull_cmd_parser, 'protocol ownername reponame')
+    add_standard_args(pull_cmd_parser,
+                      ('protocol',
+                       'ownername',
+                       'reponame'))
     pull_cmd_parser.set_defaults(func=pull_command)
 
+    #
     # CREATE-FROM-LOCAL COMMAND PARSER
+    #
     create_from_local_cmd_parser = subp.add_parser('create_from_local',
                             usage=('bitbucket create_from_local [-h]\n'
                                    '                        [--username USERNAME]\n'
@@ -212,11 +242,18 @@ def run():
                                    '                        reponame'),
                             description='create a bitbucket repo from existing local repo')
     add_standard_args(create_from_local_cmd_parser,
-                      ('username password protocol '
-                       'private scm ownername reponame'))
+                      ('username',
+                       'password',
+                       'protocol',
+                       'private',
+                       'scm',
+                       'ownername',
+                       'reponame'))
     create_from_local_cmd_parser.set_defaults(func=create_from_local)
 
+    #
     # DOWNLOAD COMMAND PARSER
+    #
     download_cmd_parser = subp.add_parser('download',
                             usage=('bitbucket download [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD]\n'
@@ -225,17 +262,24 @@ def run():
                                    '                        filename'),
                             description='download a file from a bitbucket repo')
     add_standard_args(download_cmd_parser,
-                      'username password ownername reponame')
+                      ('username',
+                       'password',
+                       'ownername',
+                       'reponame'))
     download_cmd_parser.add_argument('filename', type=str,
                                      help='the file you want to download')
     download_cmd_parser.set_defaults(func=download_command)
 
+    #
     # LIST COMMAND PARSER
+    #
     list_cmd_parser = subp.add_parser('list',
                             usage=('bitbucket list [-h] [--username USERNAME]\n'
                                    '                          [--password PASSWORD]'),
                             description='list all bitbucket repos')
-    add_standard_args(list_cmd_parser, 'username password')
+    add_standard_args(list_cmd_parser,
+                      ('username',
+                       'password'))
     list_cmd_parser.set_defaults(func=list_command)
 
     try:
