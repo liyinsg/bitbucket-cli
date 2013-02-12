@@ -144,8 +144,9 @@ def run():
                             type=str,
                             help='the bitbucket repository name')
 
+    commands = ('create', 'update', 'delete', 'clone', 'pull', 'download', 'list')
     # SUBPARSER
-    subp = p.add_subparsers(title='Commands', metavar='')
+    subp = p.add_subparsers(title='Commands', metavar='\n  '.join(commands))
 
     # CREATE COMMAND PARSER
     create_cmd_parser = subp.add_parser('create',
