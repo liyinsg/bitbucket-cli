@@ -23,7 +23,7 @@ def gen_url(scm, protocol, username, reponame):
             'https': 'https://bitbucket.org/%s/%s'
         }
     }
-    if scm not in {'git', 'hg'} or protocol not in {'ssh', 'https'}:
+    if scm not in ['git', 'hg'] or protocol not in ['ssh', 'https']:
         return ''
     return templates[scm][protocol] % (username, reponame)
 
