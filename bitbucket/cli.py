@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import getpass
 import argparse
@@ -98,9 +99,24 @@ def download_command(args):
 @password
 def list_command(args):
     response = get_user_repos(args.username, args.password)
+    repo_count = 0
+    filters = []
+    # filter for public and/or private repo
+    filters.append(lambda repo: (args.list_public and not repo.get('is_private', False)) or
+                                (args.list_private and repo.get('is_private', False)) or
+                                (args.list_public == args.list_private))
+    # filter for type of repository
+    filters.append(lambda repo: args.scm == 'all' or repo['scm'] == args.scm)
+    # filter name on regular expression
+    exp = re.compile(args.expression, re.IGNORECASE)
+    filters.append(lambda repo: exp.search(repo['name']))
+
     for repo in response:
-        display_repo_info(repo)
-    print '{0} repositories listed'.format(len(response))
+        if all([filter(repo) for filter in filters]):
+            repo_count += 1
+            display_repo_info(repo)
+
+    print '{0} repositories listed'.format(repo_count)
 
 
 def run():
@@ -144,17 +160,18 @@ def run():
                             type=str,
                             help='the bitbucket repository name')
 
-    command_names = ('create', 'update', 'delete', 'clone', 'create_from_local', 'pull', 'download', 'list')
+    command_names = ('create', 'update', 'delete', 'clone', 'create_from_local',
+                     'pull', 'download', 'list')
     # SUBPARSER
     subp = p.add_subparsers(title='Commands', metavar='\n  '.join(command_names))
 
     # CREATE COMMAND PARSER
     create_cmd_parser = subp.add_parser('create',
-                            usage=('bitbucket create [-h] [--username USERNAME]\n'
-                                   '                        [--password PASSWORD] [--private | --public]\n'
-                                   '                        [--scm SCM] [--protocol PROTOCOL]\n'
-                                   '                        reponame'),
-                            description='create a new bitbucket repository')
+                        usage=('bitbucket create [-h] [--username USERNAME]\n'
+                               '                        [--password PASSWORD] [--private | --public]\n'
+                               '                        [--scm SCM] [--protocol PROTOCOL]\n'
+                               '                        reponame'),
+                        description='create a new bitbucket repository')
     add_standard_args(create_cmd_parser,
                       ('username',
                        'password',
@@ -275,12 +292,28 @@ def run():
     #
     list_cmd_parser = subp.add_parser('list',
                             usage=('bitbucket list [-h] [--username USERNAME]\n'
-                                   '                          [--password PASSWORD]'),
+                                   '                      [--password PASSWORD]\n'
+                                   '                      [--public]\n'
+                                   '                      [--private]\n'
+                                   '                      [--scm SCM]\n'
+                                   '                      [--expression EXPRESSION]'),
                             description='list all bitbucket repos')
     add_standard_args(list_cmd_parser,
                       ('username',
                        'password'))
     list_cmd_parser.set_defaults(func=list_command)
+    list_cmd_parser.add_argument('--private', '-c', action='store_true',
+              dest='list_private',
+              default=False,
+              help='list private repositories only.')
+    list_cmd_parser.add_argument('--public ', '-o', action='store_true',
+              dest='list_public',
+              default=False,
+              help='list public repositories only.')
+    list_cmd_parser.add_argument('--scm', '-s', default='all',
+              help='list only the given scm (git|hg)')
+    list_cmd_parser.add_argument('--expression', '-e', default='.*',
+              help='list only repository names matching expression')
 
     try:
         args = p.parse_args()
