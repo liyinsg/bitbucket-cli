@@ -78,11 +78,8 @@ def create_from_local(args):
     scm_type = scm.detect_scm()
     if scm_type:
         reponame = os.path.basename(os.getcwd()).lower()
-        try:
-            create_repository(reponame, args.username, args.password,
-                              scm_type, args.private)
-        except Exception, e:
-            print e
+        create_repository(reponame, args.username, args.password,
+                          scm_type, args.private)
         scm.add_remote(args.protocol, args.username, reponame)
         scm.push_upstream()
     else:
