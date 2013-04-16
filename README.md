@@ -10,23 +10,18 @@ and aims to expose a similar interface for BitBucket users.
 
 ## Usage
 
-    bitbucket command [options]
+The BitBucket CLI can be involked with either `bitbucket` or the shortened `bb` command:
 
-## Available Commands
-	
-    clone username reponame
+    bitbucket <command> [options]
 
-    pull username reponame
 
-    create reponame
+or
 
-    create-from-local
 
-    update username reponame
+    bb <command> [options]
 
-    delete username reponame
 
-## Options
+Most `bitbucket` commands take some or all of the following options:
 
     -h, --help                        show this help message and exit
     -u USERNAME, --username=USERNAME  your bitbucket username
@@ -34,6 +29,42 @@ and aims to expose a similar interface for BitBucket users.
     -o, --public                      make this repo public
     -c, --private                     make this repo private
     -P PROTOCOL, --protocol=PROTOCOL  which network protocol to use (https|ssh)
+
+For `help` with any command:
+
+    bb <command> --help
+
+## Available Commands & Examples
+	
+`clone` an existing BitBucket repository:
+
+    ...  bb clone --username <your-user-name> --protocol ssh zhemao bitbucket-cli 
+
+`pull` a BitBucket repository:
+
+    ...  bb pull <owner-name> <repo-name>
+
+`create` a new BitBucket repository:
+
+    ...  bb create --username <your-user-name> --public --protocol ssh <new-repo-name>
+
+Creating a new BitBucket repository from an existing local repository is easy with `create_from_local`:
+
+    ...  bb create_from_local --username <your-user-name> --public --protocol ssh <repo-owner> <repo-name>
+
+`update` a BitBucket repository:
+
+    ...  bb update <user-name> <repo-name>
+
+`delete` one of your BitBucket repository:
+
+    ...  bb delete --username <your-user-name> <repo-name>
+
+
+For the `clone`, `pull`, and `create_from_local` commands, the *scm* (either *git* or *hg*) will be 
+detected from bitbucket or your local filesystem. Explicitly declaring the
+*scm* on the command line or from the user configuration will not override it.
+
 
 ## Configuration
 
@@ -49,7 +80,3 @@ format
     protocol = <'https' or 'ssh'>
 
 It will provide default options which can be overridden on the command line.
-
-For the `clone`, `pull`, and `create-from-local` commands, the scm will be 
-detected from bitbucket or your local filesystem. Explicitly declaring the
-scm on the command line or from the user configuration will not override it.
