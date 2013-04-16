@@ -1,5 +1,4 @@
 import os
-import subprocess
 from .repositories import get_repository
 from ConfigParser import SafeConfigParser as ConfigParser
 
