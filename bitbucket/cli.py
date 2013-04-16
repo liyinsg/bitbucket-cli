@@ -156,6 +156,7 @@ def run():
             parser.add_argument('reponame',
                             type=str,
                             help='the bitbucket repository name')
+        parser.add_argument('--debug', action='store_true', default=False)
 
     command_names = ('create', 'update', 'delete', 'clone', 'create_from_local',
                      'pull', 'download', 'list')
@@ -312,15 +313,31 @@ def run():
     list_cmd_parser.add_argument('--expression', '-e', default='.*',
               help='list only repository names matching expression')
 
+    def debug_print_error(args):
+        if args and args.debug:
+            import traceback
+            print '-' * 60
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            traceback.print_tb(exc_tb)
+            print '-' * 60
+
+    args = None
+    exit_code = 0
+
     try:
         args = p.parse_args()
         args.func(args)
-        sys.exit(0)
-    except HTTPError as ex:
-        print ex
-        sys.exit(1)
     except KeyboardInterrupt:
-        sys.exit(0)
+        pass
+    except HTTPError as ex:
+        # If we get this, then we know it's something with requests
+        print ex
+        debug_print_error(args)
+        exit_code = 1
     except Exception as ex:
+        # and if we're here, then something is really wrong
         print 'Unhandled error: {0}'.format(ex)
-        sys.exit(1)
+        debug_print_error(args)
+        exit_code = 2
+    finally:
+        sys.exit(exit_code)
