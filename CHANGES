@@ -8,7 +8,7 @@ version 0.2.? (February 18, 2013)
     --expression -> filter name agains regular expression
 
 
-version 0.2.? (February 11, 2013)
+version 0.2.5 (February 11, 2013)
 ---------------------------------
 
 - updated command line help options to provide better information
