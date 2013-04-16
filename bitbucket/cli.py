@@ -84,7 +84,7 @@ def create_from_local(args):
         scm.add_remote(args.protocol, args.username, reponame)
         scm.push_upstream()
     else:
-        print('Could not detect a git or hg repo in your current directory.')
+        print ('Could not detect a git or hg repo in your current directory.')
 
 
 def download_command(args):

@@ -23,9 +23,10 @@ def gen_url(scm, protocol, username, reponame):
             'https': 'https://bitbucket.org/%s/%s'
         }
     }
-    if scm not in {'git', 'hg'} or protocol not in {'ssh', 'https'}:
-        return ''
-    return templates[scm][protocol] % (username, reponame)
+    try:
+        return templates[scm][protocol] % (username, reponame)
+    except KeyError as ex:
+        raise Exception('Key error while generating url. Unknown argument `%s`' % ex)
 
 def clone(protocol, ownername, reponame, username, password):
     repo = get_repository(ownername, reponame, username, password)
