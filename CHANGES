@@ -1,3 +1,23 @@
+version 0.2.? (April 15, 2013)
+------------------------------
+
+- added --debug flag to cli which will involk a traceback to be printed on errors 
+
+- fixed bug with `clone` command (missing comma in a tuple of strings are not easy
+to find.
+
+- added better error trapping of HTTP errors thrown by requests. In particular, calls
+to create an already existing repository were erroring with just a '400 ClientError: None'
+message, which was not helpful. Now we parse the response content for info.
+
+- fixed error with a throw-away try-catch. Thanks to Florian for the patch.
+
+- updated README
+
+- trimmed down the `update` command. Options for changing the scm and protocol don't do anything,
+so stripped the options down just to changing the public/private.
+
+
 version 0.2.? (February 18, 2013)
 ---------------------------------
 

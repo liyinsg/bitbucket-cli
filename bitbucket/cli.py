@@ -11,6 +11,7 @@ from .repositories import delete_repository
 from .repositories import get_user_repos
 from .config import USERNAME, PASSWORD, SCM, PROTOCOL
 from requests.exceptions import HTTPError
+from requests.status_codes import _codes as status_codes
 
 
 def password(func):
@@ -41,22 +42,21 @@ def create_command(args):
 
 @password
 def update_command(args):
-    update_repository(args.username,
+    result = update_repository(args.username,
                       args.reponame,
                       args.password,
-                      scm=args.scm,
-                      private=args.private)
+                      is_private=args.private)
+    print ''
+    print 'Repository successfully updated.'
+    display_repo_info(result)
 
 
 @password
 def delete_command(args):
-    result = delete_repository(args.username,
+    delete_repository(args.username,
                                args.reponame,
                                args.password)
-    if result:
-        print '{0}/{1} was deleted.'.format(args.username, args.reponame)
-    else:
-        print 'repository deletion failed!'
+    print '{0}/{1} was deleted.'.format(args.username, args.reponame)
 
 
 @password
@@ -185,17 +185,15 @@ def run():
     #
     update_cmd_parser = subp.add_parser('update',
                             usage=('bitbucket update [-h] [--username USERNAME]\n'
-                                   '                        [--password PASSWORD] [--private | --public]\n'
-                                   '                        [--scm SCM] [--protocol PROTOCOL]\n'
+                                   '                        [--password PASSWORD]\n'
+                                   '                        [--private | --public]\n'
                                    '                        reponame'),
                             description='update an existing bitbucket repository')
     add_standard_args(update_cmd_parser,
                       ('username',
                        'password',
-                       'protocol',
                        'private',
-                       'scm',
-                       'ownername',
+                       'public',
                        'reponame'))
     update_cmd_parser.set_defaults(func=update_command)
 
@@ -321,6 +319,20 @@ def run():
             traceback.print_tb(exc_tb)
             print '-' * 60
 
+    def print_http_error(ex):
+        import re
+        http_err_code = ex.response.status_code
+        http_err = status_codes.get(http_err_code, [''])[0]
+        print '\nRequest Error {0}: {1}'.format(http_err_code, http_err.replace('_', ' '))
+        # Errros are being sent back as html, so let's strip
+        # out the markup to make it a bit more readable on the
+        # commandline.
+        msg = re.sub('\<[^\>]+\>', ' ', ex.response.content)
+        msg = re.sub(' +', ' ', msg)
+        msg = msg.strip()
+        if msg:
+            print msg
+
     args = None
     exit_code = 0
 
@@ -331,7 +343,7 @@ def run():
         pass
     except HTTPError as ex:
         # If we get this, then we know it's something with requests
-        print ex
+        print_http_error(ex)
         debug_print_error(args)
         exit_code = 1
     except Exception as ex:

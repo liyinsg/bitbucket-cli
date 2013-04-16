@@ -52,9 +52,10 @@ Creating a new BitBucket repository from an existing local repository is easy wi
 
     ...  bb create_from_local --username <your-user-name> --public --protocol ssh <repo-owner> <repo-name>
 
-`update` a BitBucket repository:
+`update` a BitBucket repository. Currently the only option is to change whether a repository is
+*public* or *private*. This example will make the repository private:
 
-    ...  bb update <user-name> <repo-name>
+    ...  bb update --username <user-name> --private <repo-name>
 
 `delete` one of your BitBucket repository:
 

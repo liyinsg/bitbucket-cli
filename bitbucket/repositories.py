@@ -12,9 +12,15 @@ def _optional_auth_get(url, username='', password='', **kwargs):
 
 
 def _json_or_error(r):
-    if r.status_code != 200:
+    # Let's just assume that successful calls to bitbucket
+    # will be in the 200 range regardless of the exact number.
+    # XXX: alternatively, we could pass in the expected error.
+    if r.status_code not in range(200, 300):
         r.raise_for_status()
-    return json.loads(r.content)
+    try:
+        return json.loads(r.content)
+    except:
+        pass
 
 
 def get_user_repos(username, password=''):
@@ -51,8 +57,10 @@ def get_branches(ownername, repo_slug, username, password=''):
 
 def create_repository(name, username, password, scm='hg', is_private=True):
     url = BASE_URL + 'repositories/'
-    r = requests.post(url, data={'name': name, 'scm': scm,
-            'is_private': str(bool(is_private))}, auth=(username, password))
+    payload = {'name': name,
+               'scm': scm,
+               'is_private': str(bool(is_private))}
+    r = requests.post(url, data=payload, auth=(username, password))
     return _json_or_error(r)
 
 
@@ -67,7 +75,9 @@ def update_repository(username, repo_slug, password, **opts):
 def delete_repository(username, repo_slug, password):
     url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
     r = requests.delete(url, auth=(username, password))
-    return r.status_code == 204
+    # previously testing explicitly for 204 and handling errors
+    # differently from the other calls.
+    return _json_or_error(r)
 
 
 def download_file(repo_user, repo_slug, filename, username='', password=''):
