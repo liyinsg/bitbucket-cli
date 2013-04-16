@@ -2,6 +2,7 @@ import os
 from .repositories import get_repository
 from ConfigParser import SafeConfigParser as ConfigParser
 
+
 def detect_scm(path='.'):
     git_path = os.path.join(path, '.git')
     hg_path = os.path.join(path, '.hg')
@@ -10,6 +11,7 @@ def detect_scm(path='.'):
     if os.path.isdir(hg_path):
         return 'hg'
     return ''
+
 
 def gen_url(scm, protocol, username, reponame):
     templates = {
@@ -27,11 +29,13 @@ def gen_url(scm, protocol, username, reponame):
     except KeyError as ex:
         raise Exception('Key error while generating url. Unknown argument `%s`' % ex)
 
+
 def clone(protocol, ownername, reponame, username, password):
     repo = get_repository(ownername, reponame, username, password)
     scm = repo['scm']
     url = gen_url(scm, protocol, ownername, reponame)
     os.system('%s clone %s' % (scm, url))
+
 
 def pull(protocol, username, reponame):
     scm = detect_scm()
@@ -41,6 +45,7 @@ def pull(protocol, username, reponame):
     elif scm == 'hg':
         os.system('hg pull %s' % url)
 
+
 def push(protocol, username, reponame):
     scm = detect_scm()
     url = gen_url(scm, protocol, username, reponame)
@@ -49,6 +54,7 @@ def push(protocol, username, reponame):
     elif scm == 'hg':
         os.system('hg push %s' % url)
 
+
 def push_upstream(remotename='origin'):
     scm = detect_scm()
 
@@ -56,7 +62,8 @@ def push_upstream(remotename='origin'):
         os.system('git push --set-upstream %s master' % remotename)
     elif scm == 'hg':
         os.system('hg push')
-    
+
+
 def add_remote(protocol, username, reponame, remotename='origin'):
     scm = detect_scm()
     url = gen_url(scm, protocol, username, reponame)
