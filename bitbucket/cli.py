@@ -216,7 +216,7 @@ def run():
     # CLONE COMMAND PARSER
     #
     clone_cmd_parser = subp.add_parser('clone',
-                            usage=('bitbucket delete [-h] [--username USERNAME]\n'
+                            usage=('bitbucket clone [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD]\n'
                                    '                        [--protocol PROTOCOL]\n'
                                    '                        ownername\n'
@@ -225,7 +225,7 @@ def run():
     add_standard_args(clone_cmd_parser,
                       ('username',
                        'password',
-                       'protocol'
+                       'protocol',
                        'ownername',
                        'reponame'))
     clone_cmd_parser.set_defaults(func=clone_command)
