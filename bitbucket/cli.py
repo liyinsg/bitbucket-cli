@@ -17,6 +17,8 @@ from requests.status_codes import _codes as status_codes
 def password(func):
     # very basic password input
     def decorator(args):
+        if not args.username:
+            args.username = raw_input('username: ')
         if not args.password:
             args.password = getpass.getpass('password: ')
         func(args)
