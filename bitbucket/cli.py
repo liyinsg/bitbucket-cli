@@ -9,6 +9,7 @@ from .repositories import create_repository
 from .repositories import update_repository
 from .repositories import delete_repository
 from .repositories import get_user_repos
+from .repositories import set_privilege
 from .config import USERNAME, PASSWORD, SCM, PROTOCOL
 from requests.exceptions import HTTPError
 from requests.status_codes import _codes as status_codes
@@ -118,6 +119,12 @@ def list_command(args):
     print '{0} repositories listed'.format(repo_count)
 
 
+@password
+def privilege_command(args):
+    set_privilege(args.ownername, args.reponame, args.privilege,
+                  args.privilege_account, args.username, args.password)
+
+
 def run():
     # root command parser
     p = argparse.ArgumentParser(description='Interact with BitBucket',
@@ -161,7 +168,7 @@ def run():
         parser.add_argument('--debug', action='store_true', default=False)
 
     command_names = ('create', 'update', 'delete', 'clone', 'create_from_local',
-                     'pull', 'download', 'list')
+                     'pull', 'download', 'list', 'privilege')
     # SUBPARSER
     subp = p.add_subparsers(title='Commands', metavar='\n  '.join(command_names))
 
@@ -308,6 +315,31 @@ def run():
               help='list only the given scm (git|hg)')
     list_cmd_parser.add_argument('--expression', '-e', default='.*',
               help='list only repository names matching expression')
+
+
+    #
+    # PRIVILEGE COMMAND PARSER
+    #
+    privilege_cmd_parser = subp.add_parser('privilege',
+                            usage=('bitbucket privilege_local [-h]\n'
+                                   '                        [--username USERNAME]\n'
+                                   '                        [--password PASSWORD]\n'
+                                   '                        ownername\n'
+                                   '                        reponame\n'
+                                   '                        privilege_account\n'
+                                   '                        privilege'),
+                            description='update account privilege on an existing repo')
+    add_standard_args(privilege_cmd_parser,
+                      ('username',
+                       'password',
+                       'ownername',
+                       'reponame'))
+    privilege_cmd_parser.add_argument('privilege_account', type=str,
+                                      help='the account you want to change')
+    privilege_cmd_parser.add_argument('privilege', choices=['read', 'write', 'admin', 'delete'],
+                                      help='the account you want to change')
+    privilege_cmd_parser.set_defaults(func=privilege_command)
+
 
     def debug_print_error(args):
         if args and args.debug:
