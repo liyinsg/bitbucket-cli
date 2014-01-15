@@ -36,7 +36,8 @@ def create_command(args):
                                args.username,
                                args.password,
                                args.scm,
-                               args.private)
+                               args.private,
+                               args.owner)
     print ''
     print 'Repository successfully created.'
     display_repo_info(result)
@@ -82,7 +83,7 @@ def create_from_local(args):
     if scm_type:
         reponame = os.path.basename(os.getcwd()).lower()
         create_repository(reponame, args.username, args.password,
-                          scm_type, args.private)
+                          scm_type, args.private, args.owner)
         scm.add_remote(args.protocol, args.username, reponame)
         scm.push_upstream()
     else:
@@ -133,6 +134,9 @@ def run():
         if 'password' in args_to_add:
             parser.add_argument('--password', '-p', default=PASSWORD,
                             help='your bitbucket password')
+        if 'owner' in args_to_add:
+            parser.add_argument('--owner', '-w', default='',
+                            help='repository owner')
         if 'private' in args_to_add:
             parser.add_argument('--private', '-c', action='store_true',
                             dest='private',
@@ -170,6 +174,7 @@ def run():
                         usage=('bitbucket create [-h] [--username USERNAME]\n'
                                '                        [--password PASSWORD] [--private | --public]\n'
                                '                        [--scm SCM] [--protocol PROTOCOL]\n'
+                               '                        [--owner OWNER]\n'
                                '                        reponame'),
                         description='create a new bitbucket repository')
     add_standard_args(create_cmd_parser,
@@ -179,6 +184,7 @@ def run():
                        'private',
                        'public',
                        'scm',
+                       'owner',
                        'reponame'))
     create_cmd_parser.set_defaults(func=create_command)
 
@@ -252,14 +258,16 @@ def run():
                             usage=('bitbucket create_from_local [-h]\n'
                                    '                        [--username USERNAME]\n'
                                    '                        [--password PASSWORD] [--private | --public]\n'
-                                   '                        [--scm SCM] [--protocol PROTOCOL]\n'),
+                                   '                        [--scm SCM] [--protocol PROTOCOL]\n'
+                                   '                        [--owner OWNER]\n'),
                             description='create a bitbucket repo from existing local repo')
     add_standard_args(create_from_local_cmd_parser,
                       ('username',
                        'password',
                        'protocol',
                        'private',
-                       'scm'))
+                       'scm',
+                       'owner'))
     create_from_local_cmd_parser.set_defaults(func=create_from_local)
 
     #

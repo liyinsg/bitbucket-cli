@@ -55,11 +55,13 @@ def get_branches(ownername, repo_slug, username, password=''):
     return _json_or_error(r)
 
 
-def create_repository(name, username, password, scm='hg', is_private=True):
+def create_repository(name, username, password, scm='hg', is_private=True, owner=''):
     url = BASE_URL + 'repositories/'
     payload = {'name': name,
                'scm': scm,
                'is_private': str(bool(is_private))}
+    if owner != '':
+        payload['owner'] = owner
     r = requests.post(url, data=payload, auth=(username, password))
     return _json_or_error(r)
 
