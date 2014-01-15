@@ -68,7 +68,7 @@ def create_repository(name, username, password, scm='hg', is_private=True, owner
 
 def set_privilege(ownername, repo_slug, privilege, privilege_account, username, password):
     url = BASE_URL + 'privileges/%s/%s/%s' % (ownername, repo_slug, privilege_account)
-    if privilege == 'delete':
+    if privilege == 'none':
         r = requests.delete(url, auth=(username, password))
     else:
         r = requests.put(url, data=privilege, auth=(username, password))

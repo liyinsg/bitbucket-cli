@@ -329,13 +329,13 @@ def run():
     # PRIVILEGE COMMAND PARSER
     #
     privilege_cmd_parser = subp.add_parser('privilege',
-                            usage=('bitbucket privilege_local [-h]\n'
-                                   '                        [--username USERNAME]\n'
-                                   '                        [--password PASSWORD]\n'
-                                   '                        ownername\n'
-                                   '                        reponame\n'
-                                   '                        privilege_account\n'
-                                   '                        privilege'),
+                            usage=('bitbucket privilege [-h]\n'
+                                   '                    [--username USERNAME]\n'
+                                   '                    [--password PASSWORD]\n'
+                                   '                    ownername\n'
+                                   '                    reponame\n'
+                                   '                    privilege_account\n'
+                                   '                    privilege'),
                             description='update account privilege on an existing repo')
     add_standard_args(privilege_cmd_parser,
                       ('username',
@@ -344,8 +344,8 @@ def run():
                        'reponame'))
     privilege_cmd_parser.add_argument('privilege_account', type=str,
                                       help='the account you want to change')
-    privilege_cmd_parser.add_argument('privilege', choices=['read', 'write', 'admin', 'delete'],
-                                      help='the account you want to change')
+    privilege_cmd_parser.add_argument('privilege', choices=['read', 'write', 'admin', 'none'],
+                                      help='the privilege to grant')
     privilege_cmd_parser.set_defaults(func=privilege_command)
 
 
