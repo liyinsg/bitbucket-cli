@@ -90,6 +90,9 @@ def create_from_local(args):
     else:
         print ('Could not detect a git or hg repo in your current directory.')
 
+def add_remote(args):
+    scm.add_remote(args.protocol, args.username, args.reponame,
+                    args.remotename)
 
 def download_command(args):
     download_file(args.ownername, args.reponame, args.filename,
@@ -348,6 +351,27 @@ def run():
                                       help='the privilege to grant')
     privilege_cmd_parser.set_defaults(func=privilege_command)
 
+    #
+    # Add Remote Command
+    #
+
+    add_remote_cmd_parser = subp.add_parser('add_remote',
+            usage = ('bitbucket add_remote [-h]\n'
+                     '                     [--username USERNAME]\n'
+                     '                     [--password PASSWORD]\n'
+                     '                     ownername\n'
+                     '                     reponame\n'
+                     '                     [--protocol PROTOCOL]\n'
+                     '                     [--remote REMOTE]\n'),
+                     description='add remote url')
+    add_standard_args(add_remote_cmd_parser,
+                        ('username', 'password',
+                         'ownername', 'reponame',
+                         'protocol'))
+    add_remote_cmd_parser.add_argument('--remote', '-r',
+                    dest='remotename', default='origin',
+                    help = 'the name of the remote')
+    add_remote_cmd_parser.set_defaults(func=add_remote)
 
     def debug_print_error(args):
         if args and args.debug:
