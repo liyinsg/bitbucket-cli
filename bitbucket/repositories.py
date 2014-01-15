@@ -94,7 +94,7 @@ def download_file(repo_user, repo_slug, filename, username='', password=''):
     url = 'https://bitbucket.org/%s/%s/downloads/%s' % \
         (repo_user, repo_slug, filename)
 
-    print url
+    print(url)
     if password:
         r = requests.get(url, auth=HTTPDigestAuth(username, password))
     else:
