@@ -61,6 +61,14 @@ def push_upstream(remotename='origin'):
     if scm == 'git':
         os.system('git push --set-upstream %s master' % remotename)
     elif scm == 'hg':
+        parser = ConfigParser()
+        parser.read(['.hg/hgrc'])
+        url = parser.get('paths', remotename)
+        parser.set('paths', 'default', url)
+        parser.set('paths', 'default-push', url)
+        f = open('.hg/hgrc', 'w')
+        parser.write(f)
+        f.close()
         os.system('hg push')
 
 
@@ -75,8 +83,10 @@ def add_remote(protocol, username, reponame, remotename='origin'):
         parser.read(['.hg/hgrc'])
         if not parser.has_section('paths'):
             parser.add_section('paths')
-            parser.set('paths', 'default', url)
-            parser.set('paths', 'default-push', url)
+        if not parser.has_option('paths', remotename):
+            parser.set('paths', remotename, url)
             f = open('.hg/hgrc', 'w')
             parser.write(f)
             f.close()
+        else:
+            print("Error: remote %s already exists" % remotename)
