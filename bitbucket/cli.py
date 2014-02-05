@@ -156,7 +156,7 @@ def run():
             parser.add_argument('--public ', '-o', action='store_false',
                             dest='private',
                             default=True,
-                            help='make this repo private')
+                            help='make this repo public')
         if 'scm' in args_to_add:
             parser.add_argument('--scm', '-s', default=SCM,
                             help='which scm to use (git|hg)')
