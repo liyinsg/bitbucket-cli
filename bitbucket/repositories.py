@@ -62,8 +62,8 @@ def open_pull(username, password, ownername, repo_slug, source='',
     ''' Opens a pull request against the current repository. '''
     url = BASE_URL_V2 + 'repositories/{0}/{1}/pullrequests'.format(ownername,
                                                                 repo_slug)
-    print url
-    full_name = '/'.join([ownername, repo_slug])
+    name = ownername or username
+    full_name = '/'.join([name, repo_slug])
     if not title:
         title = 'Merging {0} into {1}'.format(source, destination)
 
