@@ -55,6 +55,26 @@ def get_branches(ownername, repo_slug, username, password=''):
     return _json_or_error(r)
 
 
+def open_pull(username, password, ownername, repo_slug, source='',
+              dest='master', title=''):
+    ''' Opens a pull request against the current repository. '''
+    url = BASE_URL + 'repositories/{0}/{1}/pullrequests'.format(ownername,
+                                                                repo_slug)
+    r = _optional_auth_get(url, username, password)
+    full_name = '/'.join([ownername, repo_slug])
+
+    payload = {'title': title,
+               'description': '',
+               'source': {'branch': {'name': source},
+                          'repository': {'full_name': full_name}},
+               'destination': {'branch': {'name': dest}},
+               'reviewers': [],
+               'close_source_branch': 'false'}
+
+    r = requests.post(url, data=payload, auth=(username, password))
+    return _json_or_error(r)
+
+
 def create_repository(name, username, password, scm='hg', is_private=True, owner=''):
     url = BASE_URL + 'repositories/'
     payload = {'name': name,
