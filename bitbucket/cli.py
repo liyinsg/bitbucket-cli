@@ -298,26 +298,26 @@ def run():
     create_from_local_cmd_parser.set_defaults(func=create_from_local)
 
     #
-    # OPEN-PULL-REQUEST COMMAND PARSER
+    # OPEN-pull_request COMMAND PARSER
     #
-    # ex: bb pull-request [opens a pull request for the current branch to master]
-    # ex: bb pull-request master [opens a pull request for the current branch to master]
-    # ex: bb pull-request master feature/new-feature [opens a pull request for feature/new-feature to master]
-    open_pull_cmd_parser = subp.add_parser('pull-request',
-                            usage=('bitbucket pull-request [-h]\n'
-                                   '                        [--username USERNAME]\n'
-                                   '                        [--password PASSWORD] [--private | --public]\n'
-                                   '                        [--owner OWNER]\n'
-                                   '                        destination\n',
-                                   '                        source\n',
-                                   '                        [--title TITLE]\n',),
-                            description='open a bitbucket pull request for current repo from source to destination')
+    # ex: bb pull_request [opens a pull request for the current branch to master]
+    # ex: bb pull_request master [opens a pull request for the current branch to master]
+    # ex: bb pull_request master feature/new-feature [opens a pull request for feature/new-feature to master]
+    open_pull_cmd_parser = subp.add_parser('pull_request',
+        usage=('bitbucket pull_request [-h]\n'
+               '                        [--username USERNAME]\n'
+               '                        [--password PASSWORD] [--private | --public]\n'
+               '                        [--owner OWNER]\n'
+               '                        destination\n',
+               '                        source\n',
+               '                        [--title TITLE]\n',),
+               description='open a bitbucket pull request for current repo from source to destination')
     open_pull_cmd_parser.add_argument('source', default='',
-                    help = 'the source branch')
+                                      help='the source branch')
     open_pull_cmd_parser.add_argument('desination', default='master',
-                    help = 'the destination branch')
+                                      help='the destination branch')
     open_pull_cmd_parser.add_argument('--title', '-t', required=False, default='',
-                    help = 'the title for the pull request')
+                                      help='the title for the pull request')
     add_standard_args(open_pull_cmd_parser,
                       ('username',
                        'password'))
