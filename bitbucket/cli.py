@@ -132,11 +132,9 @@ def open_pull_command(args):
                        args.owner,
                        reponame,
                        args.source,
-                       args.dest,
+                       args.destination,
                        args.title)
-    result = 'yes'
-    print ''
-    print 'Pull request successfully opened.'
+    print "Pull request {0} successfully opened.".format(args.title)
     display_repo_info(result)
 
 
@@ -191,7 +189,7 @@ def run():
                             help='the bitbucket repository name')
         parser.add_argument('--debug', action='store_true', default=False)
 
-    command_names = ('create', 'update', 'delete', 'clone', 'create_from_local',
+    command_names = ('create', 'update', 'delete', 'clone', 'create_from_local', 'pull_request',
                      'pull', 'download', 'list', 'privilege')
     # SUBPARSER
     subp = p.add_subparsers(title='Commands', metavar='\n  '.join(command_names))
@@ -304,23 +302,21 @@ def run():
     # ex: bb pull_request master [opens a pull request for the current branch to master]
     # ex: bb pull_request master feature/new-feature [opens a pull request for feature/new-feature to master]
     open_pull_cmd_parser = subp.add_parser('pull_request',
-        usage=('bitbucket pull_request [-h]\n'
-               '                        [--username USERNAME]\n'
-               '                        [--password PASSWORD] [--private | --public]\n'
-               '                        [--owner OWNER]\n'
-               '                        destination\n',
-               '                        source\n',
-               '                        [--title TITLE]\n',),
-               description='open a bitbucket pull request for current repo from source to destination')
+                             usage=('bitbucket pull_request [-h]\n'
+                                    '                        [--username USERNAME]\n'
+                                    '                        [--password PASSWORD] [--private | --public]\n'
+                                    '                        [--owner OWNER]\n'
+                                    '                        [--title TITLE]\n'
+                                    '                        source\n'
+                                    '                        destination\n'),
+                             description='open a bitbucket pull request for current repo from source to destination')
     open_pull_cmd_parser.add_argument('source', default='',
                                       help='the source branch')
-    open_pull_cmd_parser.add_argument('desination', default='master',
+    open_pull_cmd_parser.add_argument('destination', default='master',
                                       help='the destination branch')
     open_pull_cmd_parser.add_argument('--title', '-t', required=False, default='',
                                       help='the title for the pull request')
-    add_standard_args(open_pull_cmd_parser,
-                      ('username',
-                       'password'))
+    add_standard_args(open_pull_cmd_parser, ('owner', 'username', 'password'))
     open_pull_cmd_parser.set_defaults(func=open_pull_command)
 
     #

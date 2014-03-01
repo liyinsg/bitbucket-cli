@@ -3,6 +3,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 
 BASE_URL = 'https://api.bitbucket.org/1.0/'
+BASE_URL_V2 = 'https://api.bitbucket.org/2.0/'
 
 
 def _optional_auth_get(url, username='', password='', **kwargs):
@@ -56,20 +57,24 @@ def get_branches(ownername, repo_slug, username, password=''):
 
 
 def open_pull(username, password, ownername, repo_slug, source='',
-              dest='master', title=''):
+              destination='master', title='',
+              description='This request was automatically generated.'):
     ''' Opens a pull request against the current repository. '''
-    url = BASE_URL + 'repositories/{0}/{1}/pullrequests'.format(ownername,
+    url = BASE_URL_V2 + 'repositories/{0}/{1}/pullrequests'.format(ownername,
                                                                 repo_slug)
-    r = _optional_auth_get(url, username, password)
+    print url
     full_name = '/'.join([ownername, repo_slug])
+    if not title:
+        title = 'Merging {0} into {1}'.format(source, destination)
 
     payload = {'title': title,
-               'description': '',
+               'description': description,
                'source': {'branch': {'name': source},
                           'repository': {'full_name': full_name}},
-               'destination': {'branch': {'name': dest}},
-               'reviewers': [],
+               'destination': {'branch': {'name': destination}},
+               'reviewers': [{}],
                'close_source_branch': 'false'}
+    print payload
 
     r = requests.post(url, data=payload, auth=(username, password))
     return _json_or_error(r)
