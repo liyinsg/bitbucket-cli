@@ -276,6 +276,7 @@ def run():
                        'password',
                        'protocol',
                        'private',
+                       'public',
                        'scm',
                        'owner'))
     create_from_local_cmd_parser.set_defaults(func=create_from_local)
