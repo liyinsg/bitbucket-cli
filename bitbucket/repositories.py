@@ -62,7 +62,7 @@ def open_pull(username, password, ownername, repo_slug, source='',
     ''' Opens a pull request against the current repository. '''
     name = ownername or username
     url = BASE_URL_V2 + 'repositories/{0}/{1}/pullrequests'.format(name,
-                                                                repo_slug)
+                                                                   repo_slug)
     full_name = '/'.join([name, repo_slug])
     if not title:
         title = 'Merging {0} into {1}'.format(source, destination)
@@ -72,13 +72,13 @@ def open_pull(username, password, ownername, repo_slug, source='',
                'source': {'branch': {'name': source},
                           'repository': {'full_name': full_name}},
                'destination': {'branch': {'name': destination}},
-               'reviewers': [{}],
+               'reviewers': [{'username': ''}],
                'close_source_branch': 'false'}
-    headers = {'content-type': 'application/json'}
+    headers = {'Content-Type': 'application/json'}
 
-    r = requests.post(url, data=payload, auth=(username, password), headers=headers)
-    if r.status_code == 400:
-        print 'A bad request was returned. Usually this means your credentials are wrong, or there are no changes between your branches.'
+    r = requests.post(url, data=payload, headers=headers,
+                      auth=(username, password))
+    print r.headers
     return _json_or_error(r)
 
 
