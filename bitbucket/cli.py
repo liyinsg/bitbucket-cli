@@ -85,7 +85,7 @@ def create_from_local(args):
         reponame = os.path.basename(os.getcwd()).lower()
         create_repository(reponame, args.username, args.password,
                           scm_type, args.private, args.owner)
-        scm.add_remote(args.protocol, args.username, reponame)
+        scm.add_remote(args.protocol, args.owner or args.username, reponame)
         scm.push_upstream()
     else:
         print ('Could not detect a git or hg repo in your current directory.')
