@@ -74,6 +74,14 @@ def set_privilege(ownername, repo_slug, privilege, privilege_account, username, 
         r = requests.put(url, data=privilege, auth=(username, password))
     return _json_or_error(r)
 
+def set_group_privilege(ownername, repo_slug, privilege, teamname, groupname, username, password):
+    url = BASE_URL + 'group-privileges/%s/%s/%s/%s' % (ownername, repo_slug, teamname, groupname)
+    if privilege == 'none':
+        r = requests.delete(url, auth=(username, password))
+    else:
+        r = requests.put(url, data=privilege, auth=(username, password))
+    return _json_or_error(r)
+
 def update_repository(username, repo_slug, password, **opts):
     url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
     if opts.get('is_private'):
