@@ -6,7 +6,8 @@ from ConfigParser import SafeConfigParser as ConfigParser
 def detect_scm(path='.'):
     git_path = os.path.join(path, '.git')
     hg_path = os.path.join(path, '.hg')
-    if os.path.isdir(git_path):
+    # .git is a dir in the typical case, but can be a file for submodules (file points to actual git dir)
+    if os.path.isdir(git_path) or os.path.isfile(git_path):
         return 'git'
     if os.path.isdir(hg_path):
         return 'hg'
