@@ -10,6 +10,7 @@ from .repositories import update_repository
 from .repositories import delete_repository
 from .repositories import get_user_repos
 from .repositories import set_privilege
+from .repositories import set_group_privilege
 from .config import USERNAME, PASSWORD, SCM, PROTOCOL
 from requests.exceptions import HTTPError
 from requests.status_codes import _codes as status_codes
@@ -128,6 +129,11 @@ def privilege_command(args):
     set_privilege(args.ownername, args.reponame, args.privilege,
                   args.privilege_account, args.username, args.password)
 
+@password
+def group_privilege_command(args):
+    set_group_privilege(args.ownername, args.reponame, args.privilege,
+                        args.teamname, args.groupname,
+                        args.username, args.password)
 
 def run():
     # root command parser
@@ -175,7 +181,7 @@ def run():
         parser.add_argument('--debug', action='store_true', default=False)
 
     command_names = ('create', 'update', 'delete', 'clone', 'create_from_local',
-                     'pull', 'download', 'list', 'privilege')
+                     'pull', 'download', 'list', 'privilege', 'group-privilege')
     # SUBPARSER
     subp = p.add_subparsers(title='Commands', metavar='\n  '.join(command_names))
 
@@ -351,6 +357,32 @@ def run():
     privilege_cmd_parser.add_argument('privilege', choices=['read', 'write', 'admin', 'none'],
                                       help='the privilege to grant')
     privilege_cmd_parser.set_defaults(func=privilege_command)
+
+    #
+    # GROUP-PRIVILEGE COMMAND PARSER
+    #
+    group_privilege_cmd_parser = subp.add_parser('group-privilege',
+                                  usage=('bitbucket group-privilege [-h]\n'
+                                         '                          [--username USERNAME]\n'
+                                         '                          [--password PASSWORD]\n'
+                                         '                          ownername\n'
+                                         '                          reponame\n'
+                                         '                          teamname\n'
+                                         '                          groupname\n'
+                                         '                          privilege\n'),
+                                  description='update group privilege on an existing repo')
+    add_standard_args(group_privilege_cmd_parser,
+                      ('username',
+                       'password',
+                       'ownername',
+                       'reponame'))
+    group_privilege_cmd_parser.add_argument('teamname', type=str,
+                                            help='the team account that has the group')
+    group_privilege_cmd_parser.add_argument('groupname', type=str,
+                                            help='the group you want to change')
+    group_privilege_cmd_parser.add_argument('privilege', choices=['read', 'write', 'admin', 'none'],
+                                            help='the privilege to grant')
+    group_privilege_cmd_parser.set_defaults(func=group_privilege_command)
 
     #
     # Add Remote Command
