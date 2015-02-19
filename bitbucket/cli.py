@@ -127,7 +127,7 @@ def list_command(args):
 
 @password
 def open_pull_command(args):
-    reponame = os.path.basename(os.getcwd()).lower()
+    reponame = os.path.basename(os.getcwd()).lower() if not hasattr(args, 'reponame') else args.reponame
     result = open_pull(args.username,
                        args.password,
                        args.owner,
@@ -314,6 +314,7 @@ def run():
                                     '                        [--password PASSWORD] [--private | --public]\n'
                                     '                        [--owner OWNER]\n'
                                     '                        [--title TITLE]\n'
+                                    '                        [--reponame REPOSITORY NAME]\n'
                                     '                        source\n'
                                     '                        destination\n'),
                              description='open a bitbucket pull request for current repo from source to destination')
@@ -323,6 +324,8 @@ def run():
                                       help='the destination branch')
     open_pull_cmd_parser.add_argument('--title', '-t', required=False, default='',
                                       help='the title for the pull request')
+    open_pull_cmd_parser.add_argument('--reponame', '-r', required=False, default='',
+                                      help='the repository for this pull request')
     add_standard_args(open_pull_cmd_parser, ('owner', 'username', 'password'))
     open_pull_cmd_parser.set_defaults(func=open_pull_command)
 
