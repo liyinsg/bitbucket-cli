@@ -29,7 +29,7 @@ def password(func):
 
 
 def display_repo_info(repo_info):
-    repo_info['private'] = '-' if repo_info['is_private'] else '+'
+    repo_info['private'] = '-' if 'is_private' in repo_info else '+'
     print '[{private}{scm: >4}] {owner}/{slug}'.format(**repo_info)
 
 
