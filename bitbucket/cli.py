@@ -28,8 +28,16 @@ def password(func):
     return decorator
 
 
-def display_repo_info(repo_info):
+def display_repo_info(repo_info, owner=None, reposlug=None):
     repo_info['private'] = '-' if 'is_private' in repo_info else '+'
+    if 'scm' not in repo_info:
+        repo_info['scm'] = scm.detect_scm()
+        
+    if owner:
+        repo_info['owner'] = owner
+    if reposlug:
+        repo_info['slug'] = reposlug
+        
     print '[{private}{scm: >4}] {owner}/{slug}'.format(**repo_info)
 
 
@@ -127,7 +135,7 @@ def list_command(args):
 
 @password
 def open_pull_command(args):
-    reponame = os.path.basename(os.getcwd()).lower() if not hasattr(args, 'reponame') else args.reponame
+    reponame = os.path.basename(os.getcwd()).lower() if not hasattr(args, 'reponame') or not args.reponame else args.reponame
     result = open_pull(args.username,
                        args.password,
                        args.owner,
@@ -136,7 +144,7 @@ def open_pull_command(args):
                        args.destination,
                        args.title)
     print "Pull request {0} successfully opened.".format(args.title)
-    display_repo_info(result)
+    display_repo_info(result, owner=args.owner, reposlug=reponame)
 
 
 @password
@@ -192,6 +200,7 @@ def run():
         if 'reponame' in args_to_add:
             parser.add_argument('reponame',
                             type=str,
+                            default=None,
                             help='the bitbucket repository name')
         parser.add_argument('--debug', action='store_true', default=False)
 
