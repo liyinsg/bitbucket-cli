@@ -11,6 +11,7 @@ from .repositories import delete_repository
 from .repositories import get_user_repos
 from .repositories import set_privilege
 from .repositories import set_group_privilege
+from .repositories import open_pull
 from .config import USERNAME, PASSWORD, SCM, PROTOCOL
 from requests.exceptions import HTTPError
 from requests.status_codes import _codes as status_codes
@@ -125,6 +126,20 @@ def list_command(args):
 
 
 @password
+def open_pull_command(args):
+    reponame = os.path.basename(os.getcwd()).lower()
+    result = open_pull(args.username,
+                       args.password,
+                       args.owner,
+                       reponame,
+                       args.source,
+                       args.destination,
+                       args.title)
+    print "Pull request {0} successfully opened.".format(args.title)
+    display_repo_info(result)
+
+
+@password
 def privilege_command(args):
     set_privilege(args.ownername, args.reponame, args.privilege,
                   args.privilege_account, args.username, args.password)
@@ -180,8 +195,8 @@ def run():
                             help='the bitbucket repository name')
         parser.add_argument('--debug', action='store_true', default=False)
 
-    command_names = ('create', 'update', 'delete', 'clone', 'create_from_local',
-                     'pull', 'download', 'list', 'privilege', 'group-privilege')
+    command_names = ('create', 'update', 'delete', 'clone', 'create_from_local', 'pull_request',
+                     'pull', 'download', 'list', 'privilege')
     # SUBPARSER
     subp = p.add_subparsers(title='Commands', metavar='\n  '.join(command_names))
 
@@ -286,6 +301,30 @@ def run():
                        'scm',
                        'owner'))
     create_from_local_cmd_parser.set_defaults(func=create_from_local)
+
+    #
+    # OPEN-pull_request COMMAND PARSER
+    #
+    # ex: bb pull_request [opens a pull request for the current branch to master]
+    # ex: bb pull_request master [opens a pull request for the current branch to master]
+    # ex: bb pull_request master feature/new-feature [opens a pull request for feature/new-feature to master]
+    open_pull_cmd_parser = subp.add_parser('pull_request',
+                             usage=('bitbucket pull_request [-h]\n'
+                                    '                        [--username USERNAME]\n'
+                                    '                        [--password PASSWORD] [--private | --public]\n'
+                                    '                        [--owner OWNER]\n'
+                                    '                        [--title TITLE]\n'
+                                    '                        source\n'
+                                    '                        destination\n'),
+                             description='open a bitbucket pull request for current repo from source to destination')
+    open_pull_cmd_parser.add_argument('source', default='',
+                                      help='the source branch')
+    open_pull_cmd_parser.add_argument('destination', default='master',
+                                      help='the destination branch')
+    open_pull_cmd_parser.add_argument('--title', '-t', required=False, default='',
+                                      help='the title for the pull request')
+    add_standard_args(open_pull_cmd_parser, ('owner', 'username', 'password'))
+    open_pull_cmd_parser.set_defaults(func=open_pull_command)
 
     #
     # DOWNLOAD COMMAND PARSER
