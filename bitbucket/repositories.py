@@ -18,10 +18,13 @@ def _json_or_error(r):
     # XXX: alternatively, we could pass in the expected error.
     if r.status_code not in range(200, 300):
         r.raise_for_status()
-
-    return json.loads(r.content)
-
-
+    
+    try:
+        return r.json()
+    except:
+        print r.content
+        raise
+    
 def get_user_repos(username, password=''):
     url = BASE_URL + 'user/repositories/'
     r = requests.get(url, auth=(username, password))
