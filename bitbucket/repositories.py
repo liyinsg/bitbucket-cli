@@ -66,7 +66,7 @@ def open_pull(username, password, ownername, repo_slug, source='',
     if not title:
         title = 'Merging {0} into {1}'.format(source, destination)
 
-    payload = {'title': title,
+    payload = json.dumps({'title': title,
            'description': description,
            'source': {
                'branch': {
@@ -86,10 +86,10 @@ def open_pull(username, password, ownername, repo_slug, source='',
          #         'username': ''
          # }],
          'close_source_branch': close_source_branch
-    }
+    })
     headers = {'Content-Type': 'application/json'}
 
-    r = requests.post(url, data=json.dumps(payload), headers=headers,
+    r = requests.post(url, data=payload, headers=headers,
                       auth=(username, password))
     return _json_or_error(r)
 
