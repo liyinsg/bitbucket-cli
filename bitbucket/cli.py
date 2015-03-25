@@ -59,6 +59,7 @@ def update_command(args):
     result = update_repository(args.username,
                       args.reponame,
                       args.password,
+                      owner = args.owner,
                       is_private=args.private)
     print ''
     print 'Repository successfully updated.'
@@ -237,6 +238,7 @@ def run():
                             usage=('bitbucket update [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD]\n'
                                    '                        [--private | --public]\n'
+                                   '                        [--owner OWNER]\n'
                                    '                        reponame'),
                             description='update an existing bitbucket repository')
     add_standard_args(update_cmd_parser,
@@ -244,6 +246,7 @@ def run():
                        'password',
                        'private',
                        'public',
+                       'owner',
                        'reponame'))
     update_cmd_parser.set_defaults(func=update_command)
 

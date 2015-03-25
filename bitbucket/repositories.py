@@ -125,7 +125,8 @@ def set_group_privilege(ownername, repo_slug, privilege, teamname, groupname, us
     return _json_or_error(r)
 
 def update_repository(username, repo_slug, password, **opts):
-    url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
+    owner = opts.get("owner", username)
+    url = BASE_URL + 'repositories/%s/%s/' % (owner, repo_slug)
     if opts.get('is_private'):
         opts['is_private'] = 'True'
     r = requests.put(url, data=opts, auth=(username, password))
