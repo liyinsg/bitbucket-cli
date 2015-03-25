@@ -143,8 +143,8 @@ def open_pull_command(args):
                        args.source,
                        args.destination,
                        args.title)
-    print "Pull request {0} successfully opened.".format(args.title)
-    display_repo_info(result, owner=args.owner, reposlug=reponame)
+    print "Pull request successfully opened. Link: {0}".format(
+            result["links"]["html"]["href"])
 
 
 @password
