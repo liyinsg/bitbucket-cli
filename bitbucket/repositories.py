@@ -132,13 +132,13 @@ def update_repository(username, repo_slug, password, **opts):
     return _json_or_error(r)
 
 
-def delete_repository(username, repo_slug, password):
-    url = BASE_URL + 'repositories/%s/%s/' % (username, repo_slug)
+def delete_repository(username, repo_slug, password, owner=None):
+    if not owner:
+        owner = username
+    url = BASE_URL_V2 + 'repositories/%s/%s/' % (owner, repo_slug)
     r = requests.delete(url, auth=(username, password))
-    # previously testing explicitly for 204 and handling errors
-    # differently from the other calls.
-    return _json_or_error(r)
-
+    if r.status_code not in range(200, 300):
+        r.raise_for_status()
 
 def download_file(repo_user, repo_slug, filename, username='', password=''):
     url = 'https://bitbucket.org/%s/%s/downloads/%s' % \

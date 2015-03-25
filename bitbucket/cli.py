@@ -68,9 +68,11 @@ def update_command(args):
 @password
 def delete_command(args):
     delete_repository(args.username,
-                               args.reponame,
-                               args.password)
-    print '{0}/{1} was deleted.'.format(args.username, args.reponame)
+                      args.reponame,
+                      args.password,
+                      args.owner)
+    owner = args.owner or args.username
+    print '{0}/{1} was deleted.'.format(owner, args.reponame)
 
 
 @password
@@ -251,12 +253,14 @@ def run():
     delete_cmd_parser = subp.add_parser('delete',
                             usage=('bitbucket delete [-h] [--username USERNAME]\n'
                                    '                        [--password PASSWORD]\n'
+                                   '                        [--owner OWNER]\n'
                                    '                        reponame'),
                             description='delete an existing bitbucket repository')
     add_standard_args(delete_cmd_parser,
                       ('username',
                        'reponame',
-                       'password'))
+                       'password',
+                       'owner'))
     delete_cmd_parser.set_defaults(func=delete_command)
 
     #
