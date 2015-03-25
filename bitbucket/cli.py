@@ -480,7 +480,6 @@ def run():
             print msg
 
     args = None
-    exit_code = 0
 
     try:
         args = p.parse_args()
@@ -491,11 +490,4 @@ def run():
         # If we get this, then we know it's something with requests
         print_http_error(ex)
         debug_print_error(args)
-        exit_code = 1
-    except Exception as ex:
-        # and if we're here, then something is really wrong
-        print 'Unhandled error: {0}'.format(ex)
-        debug_print_error(args)
-        exit_code = 2
-    finally:
-        sys.exit(exit_code)
+        sys.exit(1)
