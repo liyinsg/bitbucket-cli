@@ -61,6 +61,10 @@ Creating a new BitBucket repository from an existing local repository is easy wi
 
     ...  bb delete --username <your-user-name> <repo-name>
 
+`pull_request` open a bitbucket pull request for current repo from source branch to destination branch:
+
+    ...  bb pull_request --username <your-user-name> source destination
+
 
 For the `clone`, `pull`, and `create_from_local` commands, the *scm* (either *git* or *hg*) will be 
 detected from bitbucket or your local filesystem. Explicitly declaring the
