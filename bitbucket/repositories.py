@@ -18,13 +18,13 @@ def _json_or_error(r):
     # XXX: alternatively, we could pass in the expected error.
     if r.status_code not in range(200, 300):
         r.raise_for_status()
-    
+
     try:
         return r.json()
     except:
         print r.content
         raise
-    
+
 def get_user_repos(username, password=''):
     url = BASE_URL + 'user/repositories/'
     r = requests.get(url, auth=(username, password))
@@ -59,8 +59,8 @@ def get_branches(ownername, repo_slug, username, password=''):
 
 def open_pull(username, password, ownername, repo_slug, source='',
               destination='master', title='',
-              description='This request was automatically generated.',
-              close_source_branch=True, reviewers=''):
+              description='',
+              close_source_branch=False, reviewers=''):
     ''' Opens a pull request against the current repository. '''
     name = ownername or username
     url = BASE_URL_V2 + 'repositories/{0}/{1}/pullrequests'.format(name,

@@ -32,12 +32,12 @@ def display_repo_info(repo_info, owner=None, reposlug=None):
     repo_info['private'] = '-' if 'is_private' in repo_info else '+'
     if 'scm' not in repo_info:
         repo_info['scm'] = scm.detect_scm()
-        
+
     if owner:
         repo_info['owner'] = owner
     if reposlug:
         repo_info['slug'] = reposlug
-        
+
     print '[{private}{scm: >4}] {owner}/{slug}'.format(**repo_info)
 
 
@@ -145,7 +145,9 @@ def open_pull_command(args):
                        reponame,
                        args.source,
                        args.destination,
-                       args.title)
+                       args.title,
+                       args.description,
+                       args.close_source_branch)
     print "Pull request successfully opened. Link: {0}".format(
             result["links"]["html"]["href"])
 
@@ -330,7 +332,9 @@ def run():
                                     '                        [--password PASSWORD] [--private | --public]\n'
                                     '                        [--owner OWNER]\n'
                                     '                        [--title TITLE]\n'
+                                    '                        [--description DESCRIPTION]\n'
                                     '                        [--reponame REPOSITORY NAME]\n'
+                                    '                        [--close-branch]\n'
                                     '                        source\n'
                                     '                        destination\n'),
                              description='open a bitbucket pull request for current repo from source to destination')
@@ -340,8 +344,13 @@ def run():
                                       help='the destination branch')
     open_pull_cmd_parser.add_argument('--title', '-t', required=False, default='',
                                       help='the title for the pull request')
+    open_pull_cmd_parser.add_argument('--description', '-d', required=False, default='This request was automatically generated.',
+                                      help='the description for the pull request')
     open_pull_cmd_parser.add_argument('--reponame', '-r', required=False, default='',
                                       help='the repository for this pull request')
+    open_pull_cmd_parser.add_argument('--close-branch', '-cb', required=False, action='store_true', default=False,
+                                      dest='close_source_branch',
+                                      help='close the branch when the pull request is merged')
     add_standard_args(open_pull_cmd_parser, ('owner', 'username', 'password'))
     open_pull_cmd_parser.set_defaults(func=open_pull_command)
 
