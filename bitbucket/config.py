@@ -10,8 +10,21 @@ def get_default(config, section, key, default=''):
     except ConfigParser.NoOptionError:
         return default
 
+# https://github.com/scrapy/scrapy/blob/master/scrapy/utils/conf.py#L66
+def closest_bitbucket_file(path='.', prevpath=None):
+    """Return the path to the closest .bitbucket file by traversing the current
+    directory and its parents
+    """
+    if path == prevpath:
+        return ''
+    path = os.path.abspath(path)
+    cfgfile = os.path.join(path, '.bitbucket')
+    if os.path.exists(cfgfile):
+        return cfgfile
+    return closest_bitbucket_file(os.path.dirname(path), path)
 
-CONFIG_FILE = os.path.expanduser('~/.bitbucket')
+
+CONFIG_FILE = closest_bitbucket_file() or os.path.expanduser('~/.bitbucket')
 config = ConfigParser.SafeConfigParser()
 config.read([CONFIG_FILE])
 
