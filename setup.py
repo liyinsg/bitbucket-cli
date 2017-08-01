@@ -7,7 +7,7 @@ setup(
 	author_email = 'zhehao.mao@gmail.com',
 	description = 'BitBucket command line interface',
 	packages = ['bitbucket'],
-	install_requires = [ 'requests' ],
+	install_requires = [ 'requests', 'future' ],
 	entry_points = {
 		'console_scripts': [
 			'bitbucket = bitbucket.cli:run',
