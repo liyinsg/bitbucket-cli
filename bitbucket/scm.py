@@ -1,7 +1,10 @@
 import os
 from .repositories import get_repository
-from ConfigParser import SafeConfigParser as ConfigParser
 
+try:
+    from configparser import SafeConfigParser as ConfigParser
+except ImportError:
+    from ConfigParser import SafeConfigParser as ConfigParser
 
 def detect_scm(path='.'):
     git_path = os.path.join(path, '.git')

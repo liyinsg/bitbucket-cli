@@ -1,2 +1,2 @@
 from .repositories import *
-import cli 
+from . import cli

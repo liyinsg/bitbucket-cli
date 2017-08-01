@@ -1,13 +1,16 @@
 import os
-import ConfigParser
 
+try:
+    from configparser import SafeConfigParser, NoSectionError, NoOptionError
+except ImportError:
+    from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
 
 def get_default(config, section, key, default=''):
     try:
         return config.get(section, key)
-    except ConfigParser.NoSectionError:
+    except NoSectionError:
         return default
-    except ConfigParser.NoOptionError:
+    except NoOptionError:
         return default
 
 # https://github.com/scrapy/scrapy/blob/master/scrapy/utils/conf.py#L66
@@ -23,9 +26,8 @@ def closest_bitbucket_file(path='.', prevpath=None):
         return cfgfile
     return closest_bitbucket_file(os.path.dirname(path), path)
 
-
 CONFIG_FILE = closest_bitbucket_file() or os.path.expanduser('~/.bitbucket')
-config = ConfigParser.SafeConfigParser()
+config = SafeConfigParser()
 config.read([CONFIG_FILE])
 
 USERNAME = get_default(config, 'auth', 'username')

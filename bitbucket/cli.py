@@ -3,7 +3,7 @@ import re
 import sys
 import getpass
 import argparse
-import scm
+from . import scm
 from .repositories import download_file
 from .repositories import create_repository
 from .repositories import update_repository
@@ -15,13 +15,13 @@ from .repositories import open_pull
 from .config import USERNAME, PASSWORD, SCM, PROTOCOL
 from requests.exceptions import HTTPError
 from requests.status_codes import _codes as status_codes
-
+from future.builtins import input
 
 def password(func):
     # very basic password input
     def decorator(args):
         if not args.username:
-            args.username = raw_input('username: ')
+            args.username = input('username: ')
         if not args.password:
             args.password = getpass.getpass('password: ')
         func(args)
@@ -38,7 +38,7 @@ def display_repo_info(repo_info, owner=None, reposlug=None):
     if reposlug:
         repo_info['slug'] = reposlug
 
-    print '[{private}{scm: >4}] {owner}/{slug}'.format(**repo_info)
+    print('[{private}{scm: >4}] {owner}/{slug}'.format(**repo_info))
 
 
 @password
@@ -49,8 +49,8 @@ def create_command(args):
                                args.scm,
                                args.private,
                                args.owner)
-    print ''
-    print 'Repository successfully created.'
+    print('')
+    print('Repository successfully created.')
     display_repo_info(result)
 
 
@@ -61,8 +61,8 @@ def update_command(args):
                       args.password,
                       owner = args.owner,
                       is_private=args.private)
-    print ''
-    print 'Repository successfully updated.'
+    print('')
+    print('Repository successfully updated.')
     display_repo_info(result)
 
 
@@ -73,7 +73,7 @@ def delete_command(args):
                       args.password,
                       args.owner)
     owner = args.owner or args.username
-    print '{0}/{1} was deleted.'.format(owner, args.reponame)
+    print('{0}/{1} was deleted.'.format(owner, args.reponame))
 
 
 @password
@@ -101,7 +101,7 @@ def create_from_local(args):
         scm.add_remote(args.protocol, args.owner or args.username, reponame)
         scm.push_upstream()
     else:
-        print ('Could not detect a git or hg repo in your current directory.')
+        print('Could not detect a git or hg repo in your current directory.')
 
 def add_remote(args):
     scm.add_remote(args.protocol, args.username, args.reponame,
@@ -110,7 +110,7 @@ def add_remote(args):
 def download_command(args):
     download_file(args.ownername, args.reponame, args.filename,
                   args.username, args.password)
-    print "Successfully downloaded " + args.filename
+    print("Successfully downloaded " + args.filename)
 
 
 @password
@@ -133,7 +133,7 @@ def list_command(args):
             repo_count += 1
             display_repo_info(repo)
 
-    print '{0} repositories listed'.format(repo_count)
+    print('{0} repositories listed'.format(repo_count))
 
 
 @password
@@ -148,8 +148,8 @@ def open_pull_command(args):
                        args.title,
                        args.description,
                        args.close_source_branch)
-    print "Pull request successfully opened. Link: {0}".format(
-            result["links"]["html"]["href"])
+    print("Pull request successfully opened. Link: {0}".format(
+                result["links"]["html"]["href"]))
 
 
 @password
@@ -476,24 +476,24 @@ def run():
     def debug_print_error(args):
         if args and args.debug:
             import traceback
-            print '-' * 60
+            print('-' * 60)
             exc_type, exc_value, exc_tb = sys.exc_info()
             traceback.print_tb(exc_tb)
-            print '-' * 60
+            print('-' * 60)
 
     def print_http_error(ex):
         import re
         http_err_code = ex.response.status_code
         http_err = status_codes.get(http_err_code, [''])[0]
-        print '\nRequest Error {0}: {1}'.format(http_err_code, http_err.replace('_', ' '))
+        print('\nRequest Error {0}: {1}'.format(http_err_code, http_err.replace('_', ' ')))
         # Errros are being sent back as html, so let's strip
         # out the markup to make it a bit more readable on the
         # commandline.
-        msg = re.sub('\<[^\>]+\>', ' ', ex.response.content)
+        msg = re.sub('\<[^\>]+\>', ' ', ex.response.text)
         msg = re.sub(' +', ' ', msg)
         msg = msg.strip()
         if msg:
-            print msg
+            print(msg)
 
     args = None
 

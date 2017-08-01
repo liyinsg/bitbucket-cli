@@ -22,7 +22,7 @@ def _json_or_error(r):
     try:
         return r.json()
     except:
-        print r.content
+        print(r.content)
         raise
 
 def get_user_repos(username, password=''):
