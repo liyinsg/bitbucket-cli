@@ -1,4 +1,5 @@
 import os
+import stat
 
 try:
     from configparser import SafeConfigParser, NoSectionError, NoOptionError
@@ -35,9 +36,9 @@ PASSWORD = get_default(config, 'auth', 'password', None)
 SCM = get_default(config, 'options', 'scm', 'hg')
 PROTOCOL = get_default(config, 'options', 'protocol', 'https')
 
-if PASSWORD and (os.stat(CONFIG_FILE).st_mode & 0o044):
+if PASSWORD and (os.stat(CONFIG_FILE).st_mode & stat.S_IROTH):
     print ('****************************************************\n'
            '  Warning: config file is readable by other users.\n'
            '  If you are storing your password in this file,\n'
-           '  it may not be secure\n'
+           '  it may not be secure. Try running: chmod 750 ~/.bitbucket\n'
            '****************************************************')
